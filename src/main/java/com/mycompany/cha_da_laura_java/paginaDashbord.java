@@ -10,6 +10,18 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.util.Locale;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.FlowLayout;
+import java.awt.*;
+
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.BorderFactory;
+import javax.swing.JProgressBar;
+import javax.swing.*;
+import javax.swing.table.*;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -38,6 +50,9 @@ public class paginaDashbord extends javax.swing.JPanel {
         carregarGraficoProducaoProdutos();
         carregarGraficoEvolucaoSaida();
         carregarGraficoComposicaoEstoque();
+        carregarGraficoInsumosMaisConsumidos();
+        carregarTabelaEstoqueBaixo();
+        carregarTabelaUltimasMovimentacoes();
         
     }
 
@@ -211,6 +226,507 @@ public class paginaDashbord extends javax.swing.JPanel {
         graficoComposicaoEstoque.repaint();
     }
     
+    private void carregarGraficoInsumosMaisConsumidos(){
+        String[] insumos = {
+            "Camomila",
+            "Hortelã",
+            "Erva-doce",
+            "Hibisco",
+            "Chá verde"
+        };
+        
+        int[] quantidades = {12, 9, 7, 6, 5};
+        
+        int maiorQuantidade = 12;
+        
+        JPanel painel = new JPanel(new GridBagLayout());
+        painel.setBackground(Color.WHITE);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        
+        JLabel titulo = new JLabel("Insumos mais consumidos");
+        
+        titulo.setFont( new Font("SansSerif", Font.BOLD, 20));
+        
+        titulo.setForeground(new Color(30, 45, 55));
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(15, 20, 25, 20);
+        
+        painel.add(titulo,gbc);
+        
+        for(int i=0; i < insumos.length; i++){
+            JLabel nome = new JLabel(insumos[i]);
+            
+            nome.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            
+            nome.setForeground(new Color(40,55,65));
+            
+            gbc.gridx = 0;
+            gbc.gridy = i + 1;
+            gbc.gridwidth = 1;
+            gbc.weightx = 0;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.WEST;
+            gbc.insets = new Insets(8,20,8,15);
+            
+            painel.add(nome,gbc);
+            
+            JProgressBar barra = new JProgressBar();
+            
+            barra.setMinimum(0);
+            barra.setMaximum(maiorQuantidade);
+            barra.setValue(quantidades[i]);
+            
+            barra.setForeground(new Color(104,163,125));
+            barra.setBackground(new Color(235,235,235));
+            
+            barra.setBorderPainted(false);
+            barra.setStringPainted(false);
+            
+            barra.setPreferredSize(new Dimension(200,30));
+            
+            gbc.gridx = 1;
+            gbc.gridy = i +1;
+            gbc.weightx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(8,5,8,15);
+            
+            painel.add(barra,gbc);
+            
+            JLabel quantidade = new JLabel(quantidades[i] + "kg");
+            
+            quantidade.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            
+            quantidade.setForeground(new Color(40,55,65));
+            
+            gbc.gridx = 2;
+            gbc.gridy = i + 1;
+            gbc.weightx = 0;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.EAST;
+            gbc.insets = new Insets(8,5,8,20);
+            
+            painel.add(quantidade,gbc);
+        }
+        
+        gbc.gridx = 0;
+        gbc.gridy = insumos.length + 1;
+        gbc.gridwidth = 3;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0,0,0,0);
+        
+        painel.add(new JPanel(){{
+            setOpaque(false);
+        }}, gbc);
+        
+        painel.setPreferredSize(new Dimension(317,181));
+        painel.setMinimumSize(new Dimension(317,181));
+        painel.setBorder(BorderFactory.createEmptyBorder(15,0,0,0));
+        
+        graficoInsumosMaisConsumidos.removeAll();
+        graficoInsumosMaisConsumidos.setLayout(new BorderLayout());
+        graficoInsumosMaisConsumidos.add(painel, BorderLayout.CENTER);
+        graficoInsumosMaisConsumidos.revalidate();
+        graficoInsumosMaisConsumidos.repaint();
+    }
+    
+    private void carregarTabelaEstoqueBaixo() {
+
+        tabelaEstoqueBaixo.removeAll();
+        tabelaEstoqueBaixo.setLayout(new BorderLayout());
+
+        // PAINEL PRINCIPAL
+        JPanel painel = new JPanel(new BorderLayout(0, 12));
+        painel.setBackground(Color.WHITE);
+
+        painel.setBorder(
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        );
+
+        // CABEÇALHO
+        JPanel cabecalho = new JPanel(new BorderLayout());
+        cabecalho.setOpaque(false);
+
+        JLabel titulo = new JLabel("Estoque baixo");
+
+        titulo.setFont(
+            new Font("SansSerif", Font.BOLD, 14)
+        );
+
+        titulo.setForeground(new Color(35, 45, 45));
+
+        cabecalho.add(titulo, BorderLayout.WEST);
+
+        // COLUNAS
+        String[] colunas = {
+            "Nome",
+            "Tipo",
+            "Estoque atual",
+            "Estoque mínimo"
+        };
+
+        // DADOS DE EXEMPLO
+        Object[][] dados = {
+            {"Camomila", "Insumo", 5, 10},
+            {"Hortelã", "Insumo", 7, 10},
+            {"Blend Ormoni (30g)", "Produto", 6, 10},
+            {"Melissa", "Insumo", 8, 10},
+            {"Chai Masala (80g)", "Produto", 5, 10}
+        };
+
+        DefaultTableModel modelo = new DefaultTableModel(
+            dados, colunas
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable tabela = new JTable(modelo);
+
+        tabela.setFont(
+            new Font("SansSerif", Font.PLAIN, 12)
+        );
+
+        tabela.setRowHeight(27);
+
+        tabela.setShowGrid(true);
+        tabela.setGridColor(new Color(235, 235, 235));
+
+        tabela.setBackground(Color.WHITE);
+        tabela.setSelectionBackground(new Color(220, 240, 225));
+
+        tabela.setFillsViewportHeight(true);
+
+        // CABEÇALHO DA TABELA
+        JTableHeader header = tabela.getTableHeader();
+
+        header.setFont(
+            new Font("SansSerif", Font.BOLD, 10)
+        );
+
+        header.setBackground(new Color(235, 242, 235));
+        header.setForeground(new Color(35, 65, 45));
+        header.setPreferredSize(new Dimension(0, 28));
+
+        // CENTRALIZAR COLUNAS
+        DefaultTableCellRenderer centralizado =
+            new DefaultTableCellRenderer();
+
+        centralizado.setHorizontalAlignment(
+            SwingConstants.CENTER
+        );
+
+        tabela.getColumnModel().getColumn(1)
+            .setCellRenderer(centralizado);
+
+        tabela.getColumnModel().getColumn(3)
+            .setCellRenderer(centralizado);
+
+        // ESTOQUE ATUAL EM VERMELHO
+        DefaultTableCellRenderer vermelho =
+            new DefaultTableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(
+                JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column
+            ) {
+
+                Component c = super.getTableCellRendererComponent(
+                    table, value, isSelected,
+                    hasFocus, row, column
+                );
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+
+                if (!isSelected) {
+                    c.setForeground(new Color(200, 50, 60));
+                }
+
+                c.setFont(
+                    new Font("SansSerif", Font.BOLD, 12)
+                );
+
+                return c;
+            }
+        };
+
+        tabela.getColumnModel().getColumn(2)
+            .setCellRenderer(vermelho);
+
+        // AJUSTAR LARGURA DAS COLUNAS
+        tabela.setAutoResizeMode(
+            JTable.AUTO_RESIZE_ALL_COLUMNS
+        );
+
+        tabela.getColumnModel().getColumn(0)
+            .setPreferredWidth(140);
+
+        tabela.getColumnModel().getColumn(1)
+            .setPreferredWidth(65);
+
+        tabela.getColumnModel().getColumn(2)
+            .setPreferredWidth(90);
+
+        tabela.getColumnModel().getColumn(3)
+            .setPreferredWidth(90);
+
+        // SCROLL
+        JScrollPane scroll = new JScrollPane(tabela);
+
+        scroll.setBorder(
+            BorderFactory.createEmptyBorder()
+        );
+
+        scroll.getViewport().setBackground(Color.WHITE);
+
+        // ADICIONAR COMPONENTES
+        painel.add(cabecalho, BorderLayout.NORTH);
+        painel.add(scroll, BorderLayout.CENTER);
+
+        tabelaEstoqueBaixo.add(
+            painel, BorderLayout.CENTER
+        );
+
+        tabelaEstoqueBaixo.revalidate();
+        tabelaEstoqueBaixo.repaint();
+    }
+    
+    private void carregarTabelaUltimasMovimentacoes() {
+
+        tabelaUltimasMovimentacoes.removeAll();
+        tabelaUltimasMovimentacoes.setLayout(new BorderLayout());
+
+        // PAINEL PRINCIPAL
+        JPanel painel = new JPanel(new BorderLayout(0, 8));
+        painel.setBackground(Color.WHITE);
+
+        painel.setBorder(
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        );
+
+        // TÍTULO
+        JLabel titulo = new JLabel("Últimas movimentações");
+
+        titulo.setFont(
+            new Font("SansSerif", Font.BOLD, 12)
+        );
+
+        titulo.setForeground(new Color(35, 45, 45));
+
+        // COLUNAS
+        String[] colunas = {
+            "Data",
+            "Tipo",
+            "Descrição",
+            "Produto/Insumo",
+            "Quantidade",
+            "Responsável"
+        };
+
+        // DADOS DE EXEMPLO
+        Object[][] dados = {
+            {"29/09/2026", "Saída", "Venda (cliente)",
+             "Blend Calme", "5 un.", "Usuário"},
+
+            {"28/09/2026", "Produção", "Produção realizada",
+             "Blend Felicitá", "20 un.", "Usuário"},
+
+            {"27/09/2026", "Entrada", "Compra (fornecedor)",
+             "Camomila", "2 kg", "Usuário"},
+
+            {"27/09/2026", "Saída", "E-commerce",
+             "Blend Ormoni", "3 un.", "Usuário"},
+
+            {"26/09/2026", "Produção", "Produção realizada",
+             "Chai Masala", "15 un.", "Usuário"}
+        };
+
+        DefaultTableModel modelo = new DefaultTableModel(
+            dados, colunas
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable tabela = new JTable(modelo);
+
+        tabela.setFont(
+            new Font("SansSerif", Font.PLAIN, 11)
+        );
+
+        tabela.setRowHeight(22);
+
+        tabela.setShowGrid(true);
+        tabela.setGridColor(new Color(235, 235, 235));
+
+        tabela.setBackground(Color.WHITE);
+
+        tabela.setSelectionBackground(
+            new Color(225, 240, 230)
+        );
+
+        tabela.setFillsViewportHeight(true);
+
+        // CABEÇALHO
+        JTableHeader header = tabela.getTableHeader();
+
+        header.setFont(
+            new Font("SansSerif", Font.BOLD, 11)
+        );
+
+        header.setBackground(
+            new Color(235, 242, 235)
+        );
+
+        header.setForeground(
+            new Color(35, 65, 45)
+        );
+
+        header.setPreferredSize(
+            new Dimension(0, 20)
+        );
+
+        // CENTRALIZAR TIPO E QUANTIDADE
+        DefaultTableCellRenderer centralizado =
+            new DefaultTableCellRenderer();
+
+        centralizado.setHorizontalAlignment(
+            SwingConstants.CENTER
+        );
+
+        tabela.getColumnModel().getColumn(4)
+            .setCellRenderer(centralizado);
+
+        // CORES DOS TIPOS DE MOVIMENTAÇÃO
+        DefaultTableCellRenderer tipoRenderer =
+            new DefaultTableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(
+                JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column
+            ) {
+
+                super.getTableCellRendererComponent(
+                    table, value, isSelected,
+                    hasFocus, row, column
+                );
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setOpaque(true);
+
+                if (!isSelected) {
+
+                    String tipo = value.toString();
+
+                    switch (tipo) {
+
+                        case "Saída":
+                            setBackground(new Color(255, 220, 225));
+                            setForeground(new Color(170, 55, 65));
+                            break;
+
+                        case "Entrada":
+                            setBackground(new Color(215, 235, 255));
+                            setForeground(new Color(45, 100, 160));
+                            break;
+
+                        case "Produção":
+                            setBackground(new Color(215, 245, 220));
+                            setForeground(new Color(45, 120, 65));
+                            break;
+
+                        default:
+                            setBackground(Color.WHITE);
+                            setForeground(Color.BLACK);
+                    }
+
+                }
+
+                return this;
+            }
+        };
+
+        tabela.getColumnModel().getColumn(1)
+            .setCellRenderer(tipoRenderer);
+
+        // AJUSTAR LARGURA DAS COLUNAS
+        tabela.setAutoResizeMode(
+            JTable.AUTO_RESIZE_ALL_COLUMNS
+        );
+        
+        tabela.setRowHeight(22);
+        
+        tabela.getTableHeader().setPreferredSize(new Dimension(0,20));
+
+        tabela.getColumnModel().getColumn(0)
+            .setPreferredWidth(95);
+
+        tabela.getColumnModel().getColumn(1)
+            .setPreferredWidth(85);
+
+        tabela.getColumnModel().getColumn(2)
+            .setPreferredWidth(160);
+
+        tabela.getColumnModel().getColumn(3)
+            .setPreferredWidth(140);
+
+        tabela.getColumnModel().getColumn(4)
+            .setPreferredWidth(90);
+
+        tabela.getColumnModel().getColumn(5)
+            .setPreferredWidth(100);
+
+        // SCROLL
+        JScrollPane scroll = new JScrollPane(tabela);
+
+        scroll.setBorder(
+            BorderFactory.createEmptyBorder()
+        );
+
+        scroll.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+
+        scroll.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+        );
+        
+        scroll.getVerticalScrollBar().setUnitIncrement(12);
+
+        scroll.getViewport().setBackground(Color.WHITE);
+
+        // ADICIONAR AO PAINEL
+        painel.add(titulo, BorderLayout.NORTH);
+        painel.add(scroll, BorderLayout.CENTER);
+
+        tabelaUltimasMovimentacoes.add(
+            scroll, BorderLayout.CENTER
+        );
+
+        tabelaUltimasMovimentacoes.revalidate();
+        tabelaUltimasMovimentacoes.repaint();
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -243,8 +759,9 @@ public class paginaDashbord extends javax.swing.JPanel {
         jPanel11 = new javax.swing.JPanel();
         graficoEvolucaoDasSaidas = new javax.swing.JPanel();
         graficoComposicaoEstoque = new javax.swing.JPanel();
-        jPanel14 = new javax.swing.JPanel();
-        jPanel15 = new javax.swing.JPanel();
+        tabelaEstoqueBaixo = new javax.swing.JPanel();
+        graficoInsumosMaisConsumidos = new javax.swing.JPanel();
+        tabelaUltimasMovimentacoes = new javax.swing.JPanel();
 
         setPreferredSize(new java.awt.Dimension(1100, 600));
 
@@ -523,30 +1040,49 @@ public class paginaDashbord extends javax.swing.JPanel {
             .addGap(0, 179, Short.MAX_VALUE)
         );
 
-        jPanel14.setPreferredSize(new java.awt.Dimension(315, 179));
+        tabelaEstoqueBaixo.setBackground(new java.awt.Color(255, 255, 255));
+        tabelaEstoqueBaixo.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        tabelaEstoqueBaixo.setPreferredSize(new java.awt.Dimension(315, 179));
 
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
+        javax.swing.GroupLayout tabelaEstoqueBaixoLayout = new javax.swing.GroupLayout(tabelaEstoqueBaixo);
+        tabelaEstoqueBaixo.setLayout(tabelaEstoqueBaixoLayout);
+        tabelaEstoqueBaixoLayout.setHorizontalGroup(
+            tabelaEstoqueBaixoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 313, Short.MAX_VALUE)
         );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        tabelaEstoqueBaixoLayout.setVerticalGroup(
+            tabelaEstoqueBaixoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jPanel15.setPreferredSize(new java.awt.Dimension(315, 179));
+        graficoInsumosMaisConsumidos.setBackground(new java.awt.Color(255, 255, 255));
+        graficoInsumosMaisConsumidos.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        graficoInsumosMaisConsumidos.setPreferredSize(new java.awt.Dimension(317, 181));
 
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout graficoInsumosMaisConsumidosLayout = new javax.swing.GroupLayout(graficoInsumosMaisConsumidos);
+        graficoInsumosMaisConsumidos.setLayout(graficoInsumosMaisConsumidosLayout);
+        graficoInsumosMaisConsumidosLayout.setHorizontalGroup(
+            graficoInsumosMaisConsumidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
+        );
+        graficoInsumosMaisConsumidosLayout.setVerticalGroup(
+            graficoInsumosMaisConsumidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        tabelaUltimasMovimentacoes.setBackground(new java.awt.Color(255, 255, 255));
+        tabelaUltimasMovimentacoes.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        tabelaUltimasMovimentacoes.setPreferredSize(new java.awt.Dimension(991, 102));
+
+        javax.swing.GroupLayout tabelaUltimasMovimentacoesLayout = new javax.swing.GroupLayout(tabelaUltimasMovimentacoes);
+        tabelaUltimasMovimentacoes.setLayout(tabelaUltimasMovimentacoesLayout);
+        tabelaUltimasMovimentacoesLayout.setHorizontalGroup(
+            tabelaUltimasMovimentacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        tabelaUltimasMovimentacoesLayout.setVerticalGroup(
+            tabelaUltimasMovimentacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -556,28 +1092,30 @@ public class paginaDashbord extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(graficoProducaoPorProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(graficoEvolucaoDasSaidas, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(graficoComposicaoEstoque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tabelaUltimasMovimentacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(26, 26, 26)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(graficoProducaoPorProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(26, 26, 26)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(31, 31, 31)
+                                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(graficoEvolucaoDasSaidas, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(graficoComposicaoEstoque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(graficoInsumosMaisConsumidos, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                            .addGap(26, 26, 26)
+                            .addComponent(tabelaEstoqueBaixo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -605,9 +1143,11 @@ public class paginaDashbord extends javax.swing.JPanel {
                             .addComponent(graficoProducaoPorProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                            .addComponent(tabelaEstoqueBaixo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                            .addComponent(graficoInsumosMaisConsumidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(graficoComposicaoEstoque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tabelaUltimasMovimentacoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -627,6 +1167,7 @@ public class paginaDashbord extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel graficoComposicaoEstoque;
     private javax.swing.JPanel graficoEvolucaoDasSaidas;
+    private javax.swing.JPanel graficoInsumosMaisConsumidos;
     private javax.swing.JPanel graficoProducaoPorProduto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -644,8 +1185,6 @@ public class paginaDashbord extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -654,5 +1193,7 @@ public class paginaDashbord extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel tabelaEstoqueBaixo;
+    private javax.swing.JPanel tabelaUltimasMovimentacoes;
     // End of variables declaration//GEN-END:variables
 }
