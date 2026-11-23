@@ -103,6 +103,11 @@ public class tela_principal extends javax.swing.JFrame {
         btEsoque.setContentAreaFilled(false);
         btEsoque.setFocusPainted(false);
         btEsoque.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btEsoque.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEsoqueActionPerformed(evt);
+            }
+        });
 
         btProducao.setBackground(new java.awt.Color(200, 249, 194));
         btProducao.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -114,6 +119,11 @@ public class tela_principal extends javax.swing.JFrame {
         btProducao.setContentAreaFilled(false);
         btProducao.setFocusPainted(false);
         btProducao.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btProducao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btProducaoActionPerformed(evt);
+            }
+        });
 
         btSaidas.setBackground(new java.awt.Color(200, 249, 194));
         btSaidas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -157,6 +167,11 @@ public class tela_principal extends javax.swing.JFrame {
         btConfig.setContentAreaFilled(false);
         btConfig.setFocusPainted(false);
         btConfig.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConfigActionPerformed(evt);
+            }
+        });
 
         btSair.setBackground(new java.awt.Color(200, 249, 194));
         btSair.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -179,7 +194,6 @@ public class tela_principal extends javax.swing.JFrame {
                         .addContainerGap(9, Short.MAX_VALUE)
                         .addGroup(menuLateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btInicio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btCadastro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btEsoque, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btProducao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btSaidas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -192,7 +206,8 @@ public class tela_principal extends javax.swing.JFrame {
                                 .addComponent(logo))
                             .addGroup(menuLateralLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(btSair, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btSair, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -215,7 +230,7 @@ public class tela_principal extends javax.swing.JFrame {
                 .addComponent(btRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btSair)
                 .addGap(21, 21, 21))
         );
@@ -270,25 +285,30 @@ public class tela_principal extends javax.swing.JFrame {
         fundoLayout.setHorizontalGroup(
             fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fundoLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(menuLateral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fundoLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(menuSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(fundoLayout.createSequentialGroup()
-                        .addComponent(conteudo, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE)
+                        .addComponent(conteudo, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
                         .addGap(3, 3, 3)))
                 .addGap(11, 11, 11))
         );
         fundoLayout.setVerticalGroup(
             fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menuLateral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(fundoLayout.createSequentialGroup()
                 .addComponent(menuSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
-                .addComponent(conteudo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
+                .addGroup(fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(fundoLayout.createSequentialGroup()
+                        .addComponent(conteudo, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
+                        .addGap(6, 6, 6))
+                    .addGroup(fundoLayout.createSequentialGroup()
+                        .addComponent(menuLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -306,15 +326,17 @@ public class tela_principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastroActionPerformed
-        // TODO add your handling code here:
+      trocarPagina(new paginaCadastros());  // TODO add your handling code here:
     }//GEN-LAST:event_btCadastroActionPerformed
 
     private void btRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRelatoriosActionPerformed
-        // TODO add your handling code here:
+        
+trocarPagina(new paginaRelatorios());
+
     }//GEN-LAST:event_btRelatoriosActionPerformed
 
     private void btSaidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaidasActionPerformed
-        // TODO add your handling code here:
+       trocarPagina(new paginaSaidas());
     }//GEN-LAST:event_btSaidasActionPerformed
 
     private void btNotificacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNotificacaoActionPerformed
@@ -322,8 +344,20 @@ public class tela_principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btNotificacaoActionPerformed
 
     private void btInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btInicioActionPerformed
-        trocarPagina(new paginaDashbord());
+        trocarPagina(new paginaDashboard());
     }//GEN-LAST:event_btInicioActionPerformed
+
+    private void btProducaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btProducaoActionPerformed
+      trocarPagina(new paginaProducao());  // TODO add your handling code here:
+    }//GEN-LAST:event_btProducaoActionPerformed
+
+    private void btConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfigActionPerformed
+       trocarPagina(new paginaConfiguracoes()); // TODO add your handling code here:
+    }//GEN-LAST:event_btConfigActionPerformed
+
+    private void btEsoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEsoqueActionPerformed
+    trocarPagina(new paginaEstoque());        // TODO add your handling code here:
+    }//GEN-LAST:event_btEsoqueActionPerformed
 
     private void trocarPagina(JPanel pagina){
         conteudo.removeAll();
@@ -333,6 +367,19 @@ public class tela_principal extends javax.swing.JFrame {
         conteudo.repaint();
     }
     
+    public void voltarProducao() {
+    trocarPagina(new paginaProducao());
+}
+    
+public void abrirNovaSaida() {
+    trocarPagina(new paginaSaidas());
+   
+}
+   
+public void voltarSaidas() {
+    trocarPagina(new paginaSaidas());
+}
+     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
